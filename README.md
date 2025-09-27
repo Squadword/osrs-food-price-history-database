@@ -1,11 +1,14 @@
 
 # Table of Contents
 
+- [Overview](#overview)
 - [Create the database](#create-the-database)
-- [Populate the database](#Populate-the-database)
-  - [Fill the items table](#Fill-the-items-table)
-  - [Fill the item_prices table](#Fill-the-items_prices-table)
-- [Analyse the data](#Analyse-the-data) 
+- [Populate the database](#populate-the-database)
+  - [Fill the items table](#fill-the-items-table)
+  - [Fill the item_prices table](#fill-the-item_prices-table)
+- [Analyse the data](#analyse-the-data) 
+
+# Overview
 
 # Create the database
 
