@@ -101,12 +101,12 @@ There are packages designed for parsing responses from the MediaWiki API such as
 
 Next, each item had to be mapped to its unique id. Using the OSRS wiki [prices API](https://prices.runescape.wiki/api/v1/osrs/mapping)'s endpoint called [mapping](https://prices.runescape.wiki/api/v1/osrs/mapping) the names of each item were matched to its id. There were some issues with items such as [saradomin brew](https://oldschool.runescape.wiki/w/Saradomin_brew#4_dose) that have multiple variations, so the highest healing variant was chosen.
 
-Once the item names, ids, and heal amounts were found it was time to upload them to the table. To connect to the database, I used the [psycopg2](https://pypi.org/project/psycopg2/) package and created a function to interface with the database in [```db_query_function.py```](db_query_function.py). As the ```item_ids``` column in the ```items``` table has a constraint of UNIQUE, it is sensible to set up instructions for what to do ON CONFLICT. Updating the data is sensible as there could be updates to the game in the future that change an items ```heal_amount```. We can then call the query in python, where ```string_for_query```, is string of tuples containing all the data. 
+Once the item names, ids, and heal amounts were found it was time to upload them to the table. To connect to the database, I used the [psycopg2](https://pypi.org/project/psycopg2/) package and created a function to interface with the database in [```db_query_function.py```](db_query_function.py). As the ```item_ids``` column in the ```items``` table has a constraint of UNIQUE, it is sensible to set up instructions for what to do ON CONFLICT. Updating the data is sensible as there could be updates to the game in the future that change an items ```heal_amount```. We can then call the query in python, where ```data_for_query```, is string of tuples containing all the data.
 
 ```Python
 db_query(f'''
     INSERT INTO items (item_id, item_name, heal_amount) 
-    VALUES {string_for_query} 
+    VALUES {data_for_query} 
     ON CONFLICT (item_id) 
     DO UPDATE SET
         item_name = EXCLUDED.item_name,
@@ -114,6 +114,12 @@ db_query(f'''
     ''')
 ```
 
+
+
 ### Fill the item_prices table
 
+
+
 # Analyse the data
+
+
