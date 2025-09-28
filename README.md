@@ -28,7 +28,7 @@ The goal of this project is to create my own database, storing the historical pr
 
 To store data bout the items and their prices, we need to create a simple database. I used [Supabase](https://supabase.com/) as their free tier is generous and allows for external connections. The database will have 2 tables, 1 for storing information about each item, this will be the items table. And the other for storing the price history of these items, this will be the item_prices table.
 
-### The ```items``` table
+## The ```items``` table
 
 The items table will contain 3 columns:
 
@@ -46,7 +46,7 @@ CREATE TABLE items (
 );
 ```
 
-### The ```item_prices``` table
+## The ```item_prices``` table
 
 The ```item prices``` table will be more complex than the ```items``` table, and contain 4 columns:
 
@@ -66,7 +66,7 @@ CREATE TABLE item_prices (
 );
 ```
 
-This table would mostly work except for one major issue: a new entry to the table could be made for the same item on the same day. We want to avoid duplicate entries. Adding a combined unique constraint to the ```item_id``` and ```date``` columns solves this issue:
+This table would mostly work except for one major issue: a new entry to the table could be a duplicate entry. We can adding a combined unique constraint to the ```item_id``` and ```date``` columns to solve this issue:
 
 ```SQL
 ALTER TABLE item_prices
