@@ -1,6 +1,8 @@
 import requests
 import json
 import datetime
+from dotenv import load_dotenv
+import os
 
 from db_query_function import db_query
 
@@ -9,11 +11,15 @@ item_ids = db_query(f'''
     SELECT item_id FROM items;
     ''') 
 
+load_dotenv()
+
+EMAIL = os.getenv("email")
+DISCORD = os.getenv("discord")
 
 # Some headers for the request so the osrs wiki know who to contact if things get out of hand
 headers = {
-    'User-Agent': 'small home calculator - Discord: @Squadword ',
-    'From': 'joshuaacbuck@gmail.com'
+    'User-Agent': f'small home calculator - Discord: {DISCORD} ',
+    'From': EMAIL
 }
 
 # Define an empty list to contain the price history for each item
