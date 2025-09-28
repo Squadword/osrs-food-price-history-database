@@ -13,7 +13,7 @@ load_dotenv()
 EMAIL = os.getenv("email")
 DISCORD = os.getenv("discord")
 headers = {
-    'User-Agent': f'small home calculator - Discord: {DISCORD} ',
+    'User-Agent': f'small home calculator - Discord: {DISCORD}',
     'From': EMAIL
 }
 
