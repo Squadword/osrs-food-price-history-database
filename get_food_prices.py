@@ -49,13 +49,13 @@ for id in item_ids:
     items_price_data += item_price_log
 
 # Convert the data to a string and replace the None values as the database takes NULL instead
-string_for_query = str(items_price_data)[1:-1].replace('None', 'NULL')
+data_for_query = str(items_price_data)[1:-1].replace('None', 'NULL')
 
 # Insert the data into the item_prices table
 # There is no need to update on conflict as the data is historical and should never change
 db_query(f'''
     INSERT INTO item_prices (item_id, date, price) 
-    VALUES {string_for_query}
+    VALUES {data_for_query}
     ON CONFLICT DO NOTHING;
     ''')
 

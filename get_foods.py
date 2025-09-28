@@ -90,13 +90,13 @@ item_names = [i.replace("'", "''" ) for i in item_names]
 items_data = [*zip(*[item_ids, item_names, heal_amounts])]
 
 # Take our data and convert it to a string, removing the leading and ending '['.
-string_for_query = str(items_data)[1:-1].replace('"', "'")
+data_for_query = str(items_data)[1:-1].replace('"', "'")
 
 # Insert our data into the items table
 # If the item is already in the table, we update its name and heal amount in case anything has changed since last time
 db_query(f'''
     INSERT INTO items (item_id, item_name, heal_amount) 
-    VALUES {string_for_query} 
+    VALUES {data_for_query} 
     ON CONFLICT (item_id) 
     DO UPDATE SET
         item_name = EXCLUDED.item_name,
