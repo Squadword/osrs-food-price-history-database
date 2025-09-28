@@ -11,14 +11,12 @@ item_ids = db_query(f'''
     SELECT item_id FROM items;
     ''') 
 
+# Some headers for the request so the osrs wiki know who to contact if things get out of hand
 load_dotenv()
-
 EMAIL = os.getenv("email")
 DISCORD = os.getenv("discord")
-
-# Some headers for the request so the osrs wiki know who to contact if things get out of hand
 headers = {
-    'User-Agent': f'small home calculator - Discord: {DISCORD} ',
+    'User-Agent': f'small home calculator - Discord: {DISCORD}',
     'From': EMAIL
 }
 

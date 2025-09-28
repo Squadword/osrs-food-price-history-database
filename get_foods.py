@@ -8,12 +8,10 @@ from db_query_function import db_query
 # The URL for the mediawiki api of the osrs food table page, returning it in json format
 url = "https://oldschool.runescape.wiki/api.php?action=query&prop=revisions&rvprop=content&titles=Food/All%20food&format=json"
 
+# Some headers for the request so the osrs wiki know who to contact if things get out of hand
 load_dotenv()
-
 EMAIL = os.getenv("email")
 DISCORD = os.getenv("discord")
-
-# Some headers for the request so the osrs wiki know who to contact if things get out of hand
 headers = {
     'User-Agent': f'small home calculator - Discord: {DISCORD} ',
     'From': EMAIL
