@@ -114,7 +114,9 @@ db_query(f'''
     ''')
 ```
 
+After uplading we can check the data by either performing a ```SELECT``` statement or using the GUI on supabase. All looks good:
 
+![image](https://github.com/Squadword/osrs-food-price-history-database/blob/main/imgs/items%20table.png)
 
 ### Fill the item_prices table
 
