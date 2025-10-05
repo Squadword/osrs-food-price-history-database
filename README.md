@@ -8,6 +8,7 @@
 - [Populate the database](#populate-the-database)
   - [Fill the items table](#fill-the-items-table)
   - [Fill the item_prices table](#fill-the-item_prices-table)
+  - [Automating data transfer](#automating-data-transfer)
 - [Analyse the data](#analyse-the-data) 
 
 # Overview
@@ -126,7 +127,7 @@ To fill the  ```item_prices``` table we need to find 3 data points: an item, its
 SELECT item_id FROM items;
 ```
 
-Once a list of items is obtained, the prices for these items needs to be found. The [OSRS wiki](#https://oldschool.runescape.wiki/) has a [real time prices api](#https://oldschool.runescape.wiki/w/RuneScape:Real-time_Prices) where endpoints return varying information about items' prices. Using the [timeseries endpoint](#https://oldschool.runescape.wiki/w/RuneScape:Real-time_Prices#Time-series) returns historical data for the item queried that can go back as far as 365 days. Looping through the items obtained from the ```items``` table, we can find 365 data points per item that would be useful to have in the database. After extracting every date and price for each item, the data needs reformatting and can then be uploaded to the database using the query below, where ```data_for_query``` is string of tuples containing all the data. As the data is historical, there is no need to UPDATE ON CONFLICT as the data should never be changing.
+Once a list of items is obtained, the prices for these items needs to be found. The [OSRS wiki](https://oldschool.runescape.wiki/) has a [real time prices api](https://oldschool.runescape.wiki/w/RuneScape:Real-time_Prices) where endpoints return varying information about items' prices. Using the [timeseries endpoint](https://oldschool.runescape.wiki/w/RuneScape:Real-time_Prices#Time-series) returns historical data for the item queried that can go back as far as 365 days. Looping through the items obtained from the ```items``` table, we can find 365 data points per item that would be useful to have in the database. After extracting every date and price for each item, the data needs reformatting and can then be uploaded to the database using the query below, where ```data_for_query``` is string of tuples containing all the data. As the data is historical, there is no need to UPDATE ON CONFLICT as the data should never be changing.
 
 ```SQL
 INSERT INTO item_prices (item_id, date, price) 
@@ -138,7 +139,7 @@ After uplading we can check the data by either performing a ```SELECT``` stateme
 
 ![image](https://github.com/Squadword/osrs-food-price-history-database/blob/main/imgs/item%20prices%20table.png)
 
-We can see there is data from significantly longer than 365 days ago which is odd as the api specifies 365 days of data. Taking item id number 5929 for example we can match it using the wiki's [item  id table](#https://oldschool.runescape.wiki/w/Item_IDs) and find that it is an obscure item called 'Cider(m4)'. using the market watch graph on the [item's wiki page](#https://oldschool.runescape.wiki/w/Cider(m)_(keg)#4_pints) shows that the trade volume is frequently incredibly low, meaning there are likely days where 0 items are bought/sold:
+We can see there is data from significantly longer than 365 days ago which is odd as the api specifies 365 days of data. Taking item id number 5929 for example we can match it using the wiki's [item  id table](https://oldschool.runescape.wiki/w/Item_IDs) and find that it is an obscure item called 'Cider(m4)'. using the market watch graph on the [item's wiki page](https://oldschool.runescape.wiki/w/Cider(m)_(keg)#4_pints) shows that the trade volume is frequently incredibly low, meaning there are likely days where 0 items are bought/sold:
 
 ![image](https://github.com/Squadword/osrs-food-price-history-database/blob/main/imgs/cider%20graph.png)
 
@@ -146,7 +147,7 @@ This means the api is most likely skipping over days where it has no data for th
 
 ### Automating data transfer
 
-In order to automate the filling of data into the database, the scripts [```get_foods.py```](get_foods.py) and [```get_food_prices.py```](get_food_prices.py) scripts need to be run automatically at set intervals. This could simply be done locally on a windows machine using something like [Windows Task Schedular](#https://en.wikipedia.org/wiki/Windows_Task_Scheduler) or alternatively, the scripts could be hosted. For example sitting in something like an [AWS Lambda](#https://aws.amazon.com/lambda) or on a service such as [Python Anywhere](#https://www.pythonanywhere.com/).
+In order to automate the filling of data into the database, the scripts [```get_foods.py```](get_foods.py) and [```get_food_prices.py```](get_food_prices.py) scripts need to be run automatically at set intervals. This could simply be done locally on a windows machine using something like [Windows Task Schedular](https://en.wikipedia.org/wiki/Windows_Task_Scheduler) or alternatively, the scripts could be hosted. For example sitting in something like an [AWS Lambda](https://aws.amazon.com/lambda/) or on a service such as [Python Anywhere](https://www.pythonanywhere.com/).
 
 The [```get_foods.py```](get_foods.py) script would not need to be run very frequently, as foods are not often added to the game, and changes to their properties are very rare. So the script could run as rarely as monthly, or if incredibly accurate data is vital, the script could be run weekly, potentially a day or 2 after the weekly update.
 
