@@ -81,7 +81,7 @@ Running this code results in the schema pictured below:
 
 ### Fill the items table
 
-This step primarily uses the [```get_foods.py```](get_foods.py) and [```db_query_function.py```](db_query_function.py) script.
+This step primarily uses the [```get_foods.py```](get_foods.py) and [```db_query_function.py```](db_query_function.py) scripts.
 
 The first step to filling the databse with data is to find a collection of all the foods. Fortunately the [OSRS Wiki](https://oldschool.runescape.wiki/) is an incredibly useful resource and runs on [MediaWiki](https://www.mediawiki.org/wiki/MediaWiki), which has a comprehensive [API](https://www.mediawiki.org/wiki/API:Action_API). The wiki has a page called [All Food](https://oldschool.runescape.wiki/w/Food/All_food) which contains a collection of all foods in the game and additional information about them, notably the healing amount. Using a technique outlined by [OSRS Box](https://www.osrsbox.com/blog/2018/12/12/scraping-the-osrs-wiki-part1/), we can scrape this page of the wiki and start working with the table in Python. Unfortunately, the result is an awkward object called a wikitable that looks like:
 
@@ -101,17 +101,15 @@ There are packages designed for parsing responses from the MediaWiki API such as
 
 Next, each item had to be mapped to its unique id. Using the OSRS wiki [prices API](https://prices.runescape.wiki/api/v1/osrs/mapping)'s endpoint called [mapping](https://prices.runescape.wiki/api/v1/osrs/mapping) the names of each item were matched to its id. There were some issues with items such as [saradomin brew](https://oldschool.runescape.wiki/w/Saradomin_brew#4_dose) that have multiple variations, so the highest healing variant was chosen.
 
-Once the item names, ids, and heal amounts were found it was time to upload them to the table. To connect to the database, I used the [psycopg2](https://pypi.org/project/psycopg2/) package and created a function to interface with the database in [```db_query_function.py```](db_query_function.py). As the ```item_ids``` column in the ```items``` table has a constraint of UNIQUE, it is sensible to set up instructions for what to do ON CONFLICT. Updating the data is sensible as there could be updates to the game in the future that change an items ```heal_amount```. We can then call the query in python, where ```data_for_query```, is string of tuples containing all the data.
+Once the item names, ids, and heal amounts were found it was time to upload them to the table. To connect to the database, I used the [psycopg2](https://pypi.org/project/psycopg2/) package and created a function to interface with the database in [```db_query_function.py```](db_query_function.py). As the ```item_ids``` column in the ```items``` table has a constraint of UNIQUE, it is sensible to set up instructions for what to do ON CONFLICT. Updating the data is sensible as there could be updates to the game in the future that change an items ```heal_amount```. We can then call the query in python, where ```data_for_query``` is string of tuples containing all the data.
 
-```Python
-db_query(f'''
-    INSERT INTO items (item_id, item_name, heal_amount) 
-    VALUES {data_for_query} 
-    ON CONFLICT (item_id) 
-    DO UPDATE SET
-        item_name = EXCLUDED.item_name,
-        heal_amount = EXCLUDED.heal_amount;
-    ''')
+```SQL
+INSERT INTO items (item_id, item_name, heal_amount) 
+VALUES {data_for_query} 
+ON CONFLICT (item_id) 
+DO UPDATE SET
+item_name = EXCLUDED.item_name,
+heal_amount = EXCLUDED.heal_amount;
 ```
 
 After uplading we can check the data by either performing a ```SELECT``` statement or using the GUI on supabase. All looks good:
@@ -120,6 +118,31 @@ After uplading we can check the data by either performing a ```SELECT``` stateme
 
 ### Fill the item_prices table
 
+This step primarily uses the [```get_foods.py```](get_food_prices.py) and [```db_query_function.py```](db_query_function.py) scripts.
+
+To fill the  ```item_prices``` table we need to find 3 data points: an item, its price, and the date at which it was that price. The ```items``` table holds all the items we would be interested in so it makes sense to first get a list of all the item ids from that table:
+
+```SQL
+SELECT item_id FROM items;
+```
+
+Once a list of items is obtained, the prices for these items needs to be found. The [OSRS wiki](#https://oldschool.runescape.wiki/) has a [real time prices api](#https://oldschool.runescape.wiki/w/RuneScape:Real-time_Prices) where endpoints return varying information about items' prices. Using the [timeseries endpoint](#https://oldschool.runescape.wiki/w/RuneScape:Real-time_Prices#Time-series) returns historical data for the item queried that can go back as far as 365 days. Looping through the items obtained from the ```items``` table, we can find 365 data points per item that would be useful to have in the database. After extracting every date and price for each item, the data needs reformatting and can then be uploaded to the database using the query below, where ```data_for_query``` is string of tuples containing all the data.
+
+```SQL
+INSERT INTO item_prices (item_id, date, price) 
+VALUES {data_for_query}
+ON CONFLICT DO NOTHING;
+```
+
+After uplading we can check the data by either performing a ```SELECT``` statement or using the GUI on supabase. An interesting anomaly presents itself:
+
+![image](https://github.com/Squadword/osrs-food-price-history-database/blob/main/imgs/item%20prices%20table.png)
+
+We can see there is data from significantly longer than 365 days ago which is odd as the api specifies 365 days of data. Taking item id number 5929 for example we can match it using the wiki's [item  id table](#https://oldschool.runescape.wiki/w/Item_IDs) and find that it is an obscure item called 'Cider(m4)'. using the market watch graph on the [item's wiki page](#https://oldschool.runescape.wiki/w/Cider(m)_(keg)#4_pints) shows that the trade volume is frequently incredibly low, meaning there are likely days where 0 items are bought/sold:
+
+![image](https://github.com/Squadword/osrs-food-price-history-database/blob/main/imgs/cider%20graph.png)
+
+This means the api is most likely skipping over days where it has no data for the prices items traded and is instead returning older data. Otherwise, looking through the data, all seems good.
 
 
 # Analyse the data
