@@ -80,7 +80,7 @@ Running this code results in the schema pictured below:
 
 # Populate the database
 
-### Fill the items table
+## Fill the items table
 
 This step primarily uses the [```get_foods.py```](get_foods.py) and [```db_query_function.py```](db_query_function.py) scripts.
 
@@ -117,7 +117,7 @@ After uplading we can check the data by either performing a ```SELECT``` stateme
 
 ![image](https://github.com/Squadword/osrs-food-price-history-database/blob/main/imgs/items%20table.png)
 
-### Fill the item_prices table
+## Fill the item_prices table
 
 This step primarily uses the [```get_food_prices.py```](get_food_prices.py) and [```db_query_function.py```](db_query_function.py) scripts.
 
@@ -145,7 +145,7 @@ We can see there is data from significantly longer than 365 days ago which is od
 
 This means the api is most likely skipping over days where it has no data for the prices items traded and is instead returning older data. Otherwise, looking through the data, all seems good.
 
-### Automating data transfer
+## Automating data transfer
 
 In order to automate the filling of data into the database, the scripts [```get_foods.py```](get_foods.py) and [```get_food_prices.py```](get_food_prices.py) scripts need to be run automatically at set intervals. This could simply be done locally on a windows machine using something like [Windows Task Schedular](https://en.wikipedia.org/wiki/Windows_Task_Scheduler) or alternatively, the scripts could be hosted. For example sitting in something like an [AWS Lambda](https://aws.amazon.com/lambda/) or on a service such as [Python Anywhere](https://www.pythonanywhere.com/).
 
