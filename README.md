@@ -118,7 +118,7 @@ After uplading we can check the data by either performing a ```SELECT``` stateme
 
 ### Fill the item_prices table
 
-This step primarily uses the [```get_foods.py```](get_food_prices.py) and [```db_query_function.py```](db_query_function.py) scripts.
+This step primarily uses the [```get_food_prices.py```](get_food_prices.py) and [```db_query_function.py```](db_query_function.py) scripts.
 
 To fill the  ```item_prices``` table we need to find 3 data points: an item, its price, and the date at which it was that price. The ```items``` table holds all the items we would be interested in so it makes sense to first get a list of all the item ids from that table:
 
@@ -144,6 +144,15 @@ We can see there is data from significantly longer than 365 days ago which is od
 
 This means the api is most likely skipping over days where it has no data for the prices items traded and is instead returning older data. Otherwise, looking through the data, all seems good.
 
+### Automating data transfer
+
+In order to automate the filling of data into the database, the scripts [```get_foods.py```](get_foods.py) and [```get_food_prices.py```](get_food_prices.py) scripts need to be run automatically at set intervals. This could simply be done locally on a windows machine using something like [Windows Task Schedular](#https://en.wikipedia.org/wiki/Windows_Task_Scheduler) or alternatively, the scripts could be hosted. For example sitting in something like an [AWS Lambda](#https://aws.amazon.com/lambda) or on a service such as [Python Anywhere](#https://www.pythonanywhere.com/).
+
+The [```get_foods.py```](get_foods.py) script would not need to be run very frequently, as foods are not often added to the game, and changes to their properties are very rare. So the script could run as rarely as monthly, or if incredibly accurate data is vital, the script could be run weekly, potentially a day or 2 after the weekly update.
+
+The [```get_food_prices.py```](get_food_prices.py) script would need to run more frequently, as the price data updates every day. Personally, I would not run the script more than weekly, as I am not interested in exactly current data, but there could be applications where this script needs running daily.
+
+For my purposes though, I simply run the scripts whenever I want to do some analysis, so I know I have up to date data.
 
 # Analyse the data
 
