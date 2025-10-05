@@ -3,8 +3,8 @@
 
 - [Overview](#overview)
 - [Create the database](#create-the-database)
-  - [items table](#items-table)
-  - [item_prices table](#item_prices-table)
+  - [items table](#the-items-table)
+  - [item_prices table](#the-item_prices-table)
 - [Populate the database](#populate-the-database)
   - [Fill the items table](#fill-the-items-table)
   - [Fill the item_prices table](#fill-the-item_prices-table)
