@@ -10,6 +10,11 @@
   - [Fill the item_prices table](#fill-the-item_prices-table)
   - [Automating data transfer](#automating-data-transfer)
 - [Analyse the data](#analyse-the-data) 
+  - [Power BI](#power-bi)
+  - [Python](#python)
+- [Reflection]
+  - [Learnings]
+  - [Improvements/Extensions]
 
 # Overview
 
@@ -156,5 +161,33 @@ The [```get_food_prices.py```](get_food_prices.py) script would need to run more
 For my purposes though, I simply run the scripts whenever I want to do some analysis, so I know I have up to date data.
 
 # Analyse the data
+
+While analysis was not the focus of this project, we can do some light analysis in to show possible applications of the data.
+
+### Power BI
+
+We can make an ugly dashboard in Power BI. First the data needs to be imported which can be done directly using Power BI's inbuilt PostgreSQL database connection.
+
+Next we can start by creating a table of all foods and how much they heal. We can then add the price of the item, filtering by the most recent date. Then we can create a quick measure dividing the heal amount by the current cost to get a price per heal, showing how cost effective a food is. Finally, we can add a slider to filter foods by the amount they heal:
+
+![image](https://github.com/Squadword/osrs-food-price-history-database/blob/main/imgs/table%20data.png)
+
+Using the slider to only show foods that heal above 20 HP, we can see a table of the highest healing food in the game. We would expect these to be high priority for high level players, as inventory space is limited and they would want to bring as much healing as possible to a fight. Sorting by GP/Heal shows the most cost effective foods that heal over 20 and strawberries are the clear winner here. However, in general, the most popular foods for healing in combat in the game are manta rays, dark crabs, and tuna potato even though they score lower down on the list. To find out why, we can look further into some of the items that score well. Doing some investigation on the [wiki page for strawberries](https://oldschool.runescape.wiki/w/Strawberries#(5)), we can see that this item comes as a basket of 5 individual strawberries, meaning that in order for the player to get the full healing effect of 30 HP, they would have to click and eat the basket of strawberries 5 times and spend more time eating than other foods on this list. This makes them and inconvenient food when compared to other alternatives. Other foods on this list suffer from the same issue. All pies and pizzas require multiple bites to get the full effect, so are less time efficient than the single bite counter parts.
+
+
+To analyse more than just foods at their current prices, we can create a graph to show price history. Adding a word filter and a multiple selection filter allows for only having a few items on the graph. Filtering for the three most popular foods (manta rays, dark crabs, and tuna potato) shows a timeseries of these foods' price in the past year:
+
+![image](https://github.com/Squadword/osrs-food-price-history-database/blob/main/imgs/graph%20data.png)
+
+Looking at the graph we can see that manta rays are generally more expensive than the other two items, particularly between July and September 2025. Tuna potatoes had a strange event at the end of July where price more than doubled. Sudden increases like this are potentially due to either a group of players [merching](https://oldschool.runescape.wiki/w/Merchanting) or a significant number of [bots](https://oldschool.runescape.wiki/w/Botting) being banned.
+
+### Python
+
+
+# Reflection
+
+### Learnings
+
+### Improvements/Extensions
 
 
