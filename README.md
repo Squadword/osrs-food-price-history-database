@@ -12,9 +12,9 @@
 - [Analyse the data](#analyse-the-data) 
   - [Power BI](#power-bi)
   - [Python](#python)
-- [Reflection]
-  - [Learnings]
-  - [Improvements/Extensions]
+- [Reflection](#reflection)
+  - [Learnings](#learnings)
+  - [Improvements and Extensions](#improvements-and-extensions)
 
 # Overview
 
@@ -32,7 +32,7 @@ The goal of this project is to create my own database, storing the historical pr
 
 # Create the database
 
-To store data bout the items and their prices, we need to create a simple database. I used [Supabase](https://supabase.com/) as their free tier is generous and allows for external connections. The database will have 2 tables, 1 for storing information about each item, this will be the items table. And the other for storing the price history of these items, this will be the item_prices table.
+To store data about the items and their prices, we need to create a simple database. I used [Supabase](https://supabase.com/) as their free tier is generous and allows for external connections. The database will have 2 tables, 1 for storing information about each item, this will be the items table. And the other for storing the price history of these items, this will be the item_prices table.
 
 ## The ```items``` table
 
@@ -188,6 +188,18 @@ Looking at the graph we can see that manta rays are generally more expensive tha
 
 ### Learnings
 
-### Improvements/Extensions
+- Importing and transforming data from the wikimedia api.
+  - This was harder than expected due to the awkward formatting of the wikitable object.
+- Creating a database from scratch in SupaBase.
+  - This was simple and the gui made everything easy to check along the way.
+- Using the psycopg2 package to interface with a database through Python.
+- Directly connecting a database to PowerBI.
+
+### Improvements and Extensions
+
+- Extending the data in the database to store number of bites it takes to eat a food. As mentioned in the [Power BI](#power-bi) section, it is an important factor to consider when looking at what foods players prioritise.
+- Expand the database to other items such as potions. This would require working with additional pages on the runescape wiki but would allow for other analyses such as checking the price efficiency of training certain skills.
+- Rewrite the wiki api ingestion code to be more general. As the wikitable format was awkward to work with, the code I wrote was not very versatile and was hard coded in parts. Rewriting it to be more widely applicable would allow extensions like the previous point to be carried out more easily.
+  
 
 
