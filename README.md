@@ -199,7 +199,8 @@ Looking at the graph we can see that manta rays are generally more expensive tha
 
 - Extending the data in the database to store number of bites it takes to eat a food. As mentioned in the [Power BI](#power-bi) section, it is an important factor to consider when looking at what foods players prioritise.
 - Expand the database to other items such as potions. This would require working with additional pages on the runescape wiki but would allow for other analyses such as checking the price efficiency of training certain skills.
-- Rewrite the wiki api ingestion code to be more general. As the wikitable format was awkward to work with, the code I wrote was not very versatile and was hard coded in parts. Rewriting it to be more widely applicable would allow extensions like the previous point to be carried out more easily.
+- Rewrite the wikitable data extraction code to be more general. As the wikitable format was awkward to work with, the code I wrote was not very versatile and was hard coded in parts. Rewriting it to be more widely applicable would allow extensions like the previous point to be carried out more easily.
+- Refactor the wiki api request code to be less taxing for the hosts. The wiki requests that you do not make an unecessary amount of requests by doing things such as looping through each item to make 100s of different requests. Unfortunately, that is the only way to get historical data for each item. If the code was run daily, a single query could get the current price of each item and store that in the database. Rewriting the code with this in mind would be better for the good of the wiki.
   
 
 
